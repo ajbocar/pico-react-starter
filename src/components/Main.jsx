@@ -22,56 +22,40 @@ const Main = props => {
     }, 2000);
   };
 
-  const handleGeneratePassword = () => {
-    const types = {
-      upperCase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-      lowerCase: 'abcdefghijklmnopqrstuvwxyz',
-      numbers: '0123456789',
-      symbols: '!@#$%^&*()_+~`|}{[]:;?><,./-=',
-    };
+  function generatePassword(length, mustHaveUppercase, mustHaveLowercase, mustHaveNumbers, mustHaveSymbols) {
+    const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+    const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const numberChars = '0123456789';
+    const symbolChars = '!@#$%^&*()_-+=<>?';
 
-    const getType = [
-      function upperCase() {
-        return types.upperCase[
-          Math.floor(Math.random() * types.upperCase.length)
-        ];
-      },
-      function lowerCase() {
-        return types.lowerCase[
-          Math.floor(Math.random() * types.lowerCase.length)
-        ];
-      },
-      function numbers() {
-        return types.numbers[Math.floor(Math.random() * types.numbers.length)];
-      },
-      function symbols() {
-        return types.symbols[Math.floor(Math.random() * types.symbols.length)];
-      },
-    ];
-
+    let charset = '';
     let password = '';
 
-    if (!hasUpperCase && !hasLowerCase && !hasNumbers && !hasSymbols) {
-      return false;
+    if (mustHaveLowercase) charset += lowercaseChars;
+    if (mustHaveUppercase) charset += uppercaseChars;
+    if (mustHaveNumbers) charset += numberChars;
+    if (mustHaveSymbols) charset += symbolChars;
+
+    if (charset === '') {
+        return false;
     }
 
-    let optionsObject = {
-      upperCase: hasUpperCase,
-      lowerCase: hasLowerCase,
-      numbers: hasNumbers,
-      symbols: hasSymbols,
-    };
+    if (mustHaveLowercase) password += lowercaseChars[Math.floor(Math.random() * lowercaseChars.length)];
+    if (mustHaveUppercase) password += uppercaseChars[Math.floor(Math.random() * uppercaseChars.length)];
+    if (mustHaveNumbers) password += numberChars[Math.floor(Math.random() * numberChars.length)];
+    if (mustHaveSymbols) password += symbolChars[Math.floor(Math.random() * symbolChars.length)];
 
     while (password.length < length) {
-      let typeAdder = getType[Math.floor(Math.random() * getType.length)];
-
-      let isChecked = optionsObject[typeAdder.name];
-
-      if (isChecked) {
-        password += typeAdder();
-      }
+        const randomChar = charset[Math.floor(Math.random() * charset.length)];
+        password += randomChar;
     }
-    setPassword(password);
+
+    password = password.split('').sort(() => Math.random() - 0.5).join('');
+    return password;
+  } 
+
+  const handleGeneratePassword = () => {
+    setPassword(generatePassword(length, hasUpperCase, hasLowerCase, hasNumbers, hasSymbols));
   };
 
   useEffect(() => {
@@ -172,7 +156,7 @@ const Main = props => {
           </label>
         </fieldset>
         <input
-          onClick={handleGeneratePassword}
+          onClick={() => handleGeneratePassword()}
           type="button"
           value="Generate Password"
         />

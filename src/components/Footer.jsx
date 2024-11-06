@@ -2,10 +2,8 @@ const Footer = props => {
   return (
     <footer className="container" {...props}>
       <small>
-        Built with <a href="https://picocss.com">Pico</a> •{' '}
-        <a href="https://github.com/picocss/examples/tree/master/v2-react-color-schemes-and-modal">
-          Source code
-        </a>
+        Like this page?{" "}
+        <a href="https://www.buymeacoffee.com/ajbocar">Buy me a coffee!</a>
       </small>
     </footer>
   );
